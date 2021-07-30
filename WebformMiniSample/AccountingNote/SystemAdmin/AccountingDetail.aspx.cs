@@ -23,11 +23,16 @@ namespace AccountingNote.SystemAdmin
             string account = this.Session["UserLoginInfo"] as string;
             var drUserInfo = UserInfoManger.GetUserInfoByAccount(account);
 
-            if (drUserInfo == null)
+            var currentUser = AuthManager.GetCurrentUser();
+
+
+            if (currentUser == null)                                         //如果帳號不存在，導至登入頁
             {
+                this.Session["UserLoginInfo"] = null;        //避免無限迴圈 手動session清除
                 Response.Redirect("/Login.aspx");
                 return;
             }
+
             if (!this.IsPostBack)
             {
                 //check is create mode or edit mode
@@ -76,6 +81,15 @@ namespace AccountingNote.SystemAdmin
                 this.ltMsg.Text = string.Join("<br/>", msgList);
                 return;
             }
+
+            UserInfoModel currentUser = AuthManager.GetCurrentUser();
+
+            if (currentUser == null)                                         
+            {
+                Response.Redirect("/Login.aspx");
+                return;
+            }
+
 
             string account = this.Session["UserLoginInfo"] as string;
             var dr = UserInfoManger.GetUserInfoByAccount(account);

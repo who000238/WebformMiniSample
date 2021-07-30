@@ -21,25 +21,25 @@ namespace AccountingNote.SystemAdmin
                     Response.Redirect("/Login.aspx");
                     return;
                 }
-                string account = this.Session["UserLoginInfo"] as string;
-                DataRow dr = UserInfoManger.GetUserInfoByAccount(account);
-                    
-                if (dr == null)                                         //如果帳號不存在，導至登入頁
+
+                var currentUser = AuthManager.GetCurrentUser();
+
+
+                if (currentUser == null)                                         //如果帳號不存在，導至登入頁
                 {
-                    this.Session["UserLoginInfo"] = null;        //避免無限迴圈 手動session清除
                     Response.Redirect("/Login.aspx");
                     return;
                 }
 
-                this.ltAccount.Text = dr["Account"].ToString();
-                this.ltname.Text = dr["Name"].ToString();
-                this.ltEmail.Text = dr["Email"].ToString();
+                this.ltAccount.Text = currentUser.Account;
+                this.ltname.Text = currentUser.Name;
+                this.ltEmail.Text = currentUser.Email;
             }
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
-            this.Session["UserLoginInfo"] = null;                       //清除帳號資訊，導至登入頁
+            AuthManager.Logout();
             Response.Redirect("/Login.aspx");
         }
     }

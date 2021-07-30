@@ -25,11 +25,16 @@ namespace AccountingNote.SystemAdmin
             string account = this.Session["UserLoginInfo"] as string;
             var dr = UserInfoManger.GetUserInfoByAccount(account);
 
-            if (dr == null)
+            var currentUser = AuthManager.GetCurrentUser();
+
+
+            if (currentUser == null)                                         //如果帳號不存在，導至登入頁
             {
+                this.Session["UserLoginInfo"] = null;        //避免無限迴圈 手動session清除
                 Response.Redirect("/Login.aspx");
                 return;
             }
+
 
             //read accounting data
             var dt = AccountingManager.GetAccountingList(dr["ID"].ToString());
