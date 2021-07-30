@@ -20,7 +20,7 @@ namespace AccountingNote.Auth
         /// <returns></returns>
         public static bool IsLogined()
         {
-            
+
             if (HttpContext.Current.Session["UserLoginInfo"] == null)
                 return false;
             else
@@ -58,7 +58,47 @@ namespace AccountingNote.Auth
         /// </summary>
         public static void Logout()
         {
-            HttpContext.Current.Session["UserLoginInfo"] = null;                       
+            HttpContext.Current.Session["UserLoginInfo"] = null;
+        }
+        /// <summary>
+        /// 嘗試登入
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="pwd"></param>
+        /// <param name="errorMsg"></param>
+        /// <returns></returns>
+        public static bool TryLogin(string account, string pwd, out string errorMsg)
+        {
+            //check empty
+            if (string.IsNullOrWhiteSpace(account) || string.IsNullOrWhiteSpace(pwd))
+            {
+                errorMsg = "帳號及密碼為必填";
+                return false;
+            }
+            //read db and check
+            var dr = UserInfoManger.GetUserInfoByAccount(account);
+
+            //check null
+            if (dr == null)
+            {
+                errorMsg = $"{account}不存在";
+                return false;
+            }
+
+            //check account / pwd
+            if (string.Compare(dr["Account"].ToString(), account, true) == 0 &&
+               string.Compare(dr["PWD"].ToString(), pwd, false) == 0)
+            {
+                HttpContext.Current.Session["UserLoginInfo"] = dr["Account"].ToString();
+                errorMsg = string.Empty;
+                return true;
+            }
+            else
+            {
+                errorMsg = "登入失敗，請檢查帳號及密碼";
+                return false;
+
+            }
         }
     }
 }
