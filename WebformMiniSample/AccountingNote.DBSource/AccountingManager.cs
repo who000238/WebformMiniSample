@@ -146,22 +146,20 @@ namespace AccountingNote.DBSource
                     WHERE
                         ID = @id
                      ";
+
+            List<SqlParameter> paramList = new List<SqlParameter>();
+            paramList.Add(new SqlParameter("@userID", userID));
+            paramList.Add(new SqlParameter("@caption", caption));
+            paramList.Add(new SqlParameter("@amount", amount));
+            paramList.Add(new SqlParameter("@actType", actType));
+            paramList.Add(new SqlParameter("@createDate", DateTime.Now));
+            paramList.Add(new SqlParameter("@body", body));
+            paramList.Add(new SqlParameter("@id", ID));
             // connect db & execute
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                using (SqlCommand comm = new SqlCommand(dbCommand, conn))
-                {
-                    comm.Parameters.AddWithValue("@userID", userID);
-                    comm.Parameters.AddWithValue("@caption", caption);
-                    comm.Parameters.AddWithValue("@amount", amount);
-                    comm.Parameters.AddWithValue("@actType", actType);
-                    comm.Parameters.AddWithValue("@createDate", DateTime.Now);
-                    comm.Parameters.AddWithValue("@body", body);
-                    comm.Parameters.AddWithValue("@id", ID);
+            
                     try
                     {
-                        conn.Open();
-                        int effectRows = comm.ExecuteNonQuery();
+                int effectRows = DBHelper.ModifyData(connStr, dbCommand, paramList);
 
                         if (effectRows == 1)
                             return true;
@@ -173,8 +171,6 @@ namespace AccountingNote.DBSource
                         Logger.WriteLog(ex);
                         return false;
                     }
-                }
-            }
         }
         /// <summary>
         /// 查詢流水帳
@@ -220,25 +216,20 @@ namespace AccountingNote.DBSource
                     DELETE [Accounting]
                     WHERE
                         ID = @id ";
+
+            List<SqlParameter> paramList = new List<SqlParameter>();
+            paramList.Add(new SqlParameter("@id", ID));
             // connect db & execute
-            using (SqlConnection conn = new SqlConnection(connStr))
+            try
             {
-                using (SqlCommand comm = new SqlCommand(dbCommand, conn))
-                {
-
-                    comm.Parameters.AddWithValue("@id", ID);
-                    try
-                    {
-                        conn.Open();
-                        int effectRows = comm.ExecuteNonQuery();
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                    }
-                }
+                DBHelper. ModifyData(connStr, dbCommand, paramList);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
             }
         }
+
+        
     }
 }
