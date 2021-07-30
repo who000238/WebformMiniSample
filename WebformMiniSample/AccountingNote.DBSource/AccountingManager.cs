@@ -11,16 +11,11 @@ namespace AccountingNote.DBSource
 {
     public class AccountingManager
     {
-        private static string GetConnectionString()
-        {
-            //string val = ConfigurationManager.AppSettings["ConnectionString"];
-            string val = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            return val;
-        }
+        
 
         public static DataTable GetAccountingList(string userID)
         {
-            string connStr = GetConnectionString();
+            string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@" SELECT 
                       ID,
@@ -77,7 +72,7 @@ namespace AccountingNote.DBSource
             }
 
 
-            string connStr = GetConnectionString();
+            string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@"
                     INSERT INTO [dbo].[Accounting]
@@ -145,7 +140,7 @@ namespace AccountingNote.DBSource
             }
 
 
-            string connStr = GetConnectionString();
+            string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@"
                     UPDATE [Accounting]
@@ -197,7 +192,7 @@ namespace AccountingNote.DBSource
         /// <returns></returns>
         public static DataRow GetAccounting(int id,string userID )
         {
-            string connStr = GetConnectionString();
+            string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@" SELECT 
                       ID,
@@ -239,7 +234,7 @@ namespace AccountingNote.DBSource
 
         public static void DeleteAccounting(int ID)
         {
-            string connStr = GetConnectionString();
+            string connStr = DBHelper.GetConnectionString();
             string dbCommand =
                 $@"
                     DELETE [Accounting]
