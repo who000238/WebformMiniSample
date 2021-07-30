@@ -11,7 +11,7 @@ namespace AccountingNote.DBSource
 {
     public class AccountingManager
     {
-        
+
 
         public static DataTable GetAccountingList(string userID)
         {
@@ -26,29 +26,21 @@ namespace AccountingNote.DBSource
                     FROM Accounting
                     WHERE UserID = @userID
                 ";
-            using (SqlConnection conn = new SqlConnection(connStr))
+
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@userID", userID));
+            try
             {
-                using (SqlCommand comm = new SqlCommand(dbCommand, conn))
-                {
-                    comm.Parameters.AddWithValue("@userID", userID);
-                    try
-                    {
-                        conn.Open();
-                        var reader = comm.ExecuteReader();
-
-                        DataTable dt = new DataTable();
-                        dt.Load(reader);
-
-                        return dt;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteLog(ex);
-                        return null;
-                    }
-                }
+                return DBHelper.ReadDataTable(connStr, dbCommand, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
             }
         }
+
+        
 
         /// <summary>
         /// 建立流水帳
@@ -116,7 +108,7 @@ namespace AccountingNote.DBSource
                 }
             }
         }
-        
+
         /// <summary>
         /// 修改流水帳
         /// </summary>
@@ -190,7 +182,7 @@ namespace AccountingNote.DBSource
         /// <param name="id"></param>
         /// <param name="userID"></param>
         /// <returns></returns>
-        public static DataRow GetAccounting(int id,string userID )
+        public static DataRow GetAccounting(int id, string userID)
         {
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
@@ -245,13 +237,13 @@ namespace AccountingNote.DBSource
             {
                 using (SqlCommand comm = new SqlCommand(dbCommand, conn))
                 {
-                   
+
                     comm.Parameters.AddWithValue("@id", ID);
                     try
                     {
                         conn.Open();
                         int effectRows = comm.ExecuteNonQuery();
-                      
+
                     }
                     catch (Exception ex)
                     {
