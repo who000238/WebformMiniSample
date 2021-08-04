@@ -14,17 +14,15 @@ namespace AccountingNote.SystemAdmin
         protected void Page_Load(object sender, EventArgs e)
         {
             // check is logined
-            if (!AuthManager.IsLogined())
+            if (!AuthManager.IsLogined())   //檢查是否登入，否則跳轉到登入頁
             {
                 Response.Redirect("/Login.aspx");
                 return;
             }
 
-            string account = this.Session["UserLoginInfo"] as string;
-            var drUserInfo = UserInfoManger.GetUserInfoByAccount(account);
-
+            string account = this.Session["UserLoginInfo"] as string; //登入資訊放入帳號字串
+            var drUserInfo = UserInfoManger.GetUserInfoByAccount(account); //用帳號去取出資料(單筆)
             var currentUser = AuthManager.GetCurrentUser();
-
 
             if (currentUser == null)                                         //如果帳號不存在，導至登入頁
             {

@@ -24,8 +24,9 @@ namespace AccountingNote.DBSource
                       ActType,
                       CreateDate
                     FROM Accounting
-                    WHERE UserID = @userID
+                    WHERE UserID = @userID;
                 ";
+            //ORDER BY CreateDate DESC 如果想要查詢出來的資料依照最新日期由上至下排列 上方SQL語法中加入這段
 
             List<SqlParameter> list = new List<SqlParameter>();
             list.Add(new SqlParameter("@userID", userID));
