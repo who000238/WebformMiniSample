@@ -40,11 +40,14 @@ namespace AccountingNote.SystemAdmin
             {
                 var dtPaged = this.GetPagedDataTable(dt);
 
+                this.ucPager2.TotalSize = dt.Rows.Count;
+                this.ucPager2.Bind();
+
                 this.gvAccountingList.DataSource = dtPaged;
                 this.gvAccountingList.DataBind();
 
-                this.ucPager.TotalSize = dt.Rows.Count;
-                this.ucPager.Bind();
+                //this.ucPager.TotalSize = dt.Rows.Count;
+                //this.ucPager.Bind();
             }
             else
             {
@@ -74,9 +77,10 @@ namespace AccountingNote.SystemAdmin
 
         private DataTable GetPagedDataTable(DataTable dt)
         {
+            int pageSize = this.ucPager2.PageSize;
             DataTable dtPaged = dt.Clone();                     //複製 DataTable dt 的結構給 dtPaged
-            int startIndex = (this.GetCurrentPage() - 1) * 10;  //設定分頁控制項分別頁面的起點、終點
-            int endIndex = (this.GetCurrentPage()) * 10;
+            int startIndex = (this.GetCurrentPage() - 1) * pageSize;  //設定分頁控制項分別頁面的起點、終點
+            int endIndex = (this.GetCurrentPage()) * pageSize;
             if (endIndex > dt.Rows.Count)                       //讓最後一頁的終點可以跟資料筆數相同、否則會有超過資料筆數無法讀取的問題 out of index 的錯誤訊息
                 endIndex = dt.Rows.Count;
             for ( var i = startIndex; i < endIndex;i++)         // 設定一個for迴圈 起點為第一筆資料 終點為最後一筆資料

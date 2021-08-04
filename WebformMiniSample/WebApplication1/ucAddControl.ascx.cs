@@ -34,7 +34,6 @@ namespace WebApplication1
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-
             if (this.Session["ControlList"] != null)
             {
                 Label lbl = new Label();
@@ -53,9 +52,7 @@ namespace WebApplication1
                 this.Controls.Add(lbl);
                 this.Controls.Add(txt);
                 this.Controls.Add(btn);
-
             }
-
         }
 
         private void Btn_Click(object sender, EventArgs e)
