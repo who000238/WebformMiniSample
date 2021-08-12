@@ -23,7 +23,7 @@ namespace AccountingNote.SystemAdmin
             }
          
 
-            var currentUser = AuthManager.GetCurrentUser();
+            var currentUser = AuthManager.GetCurrentUser(); //目前登入者的各項資料 從
 
 
             if (currentUser == null)                                         //如果帳號不存在，導至登入頁

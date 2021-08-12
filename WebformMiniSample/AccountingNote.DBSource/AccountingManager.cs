@@ -64,6 +64,17 @@ namespace AccountingNote.DBSource
                 throw new ArgumentException("ActType must be 0 or 1 .");
             }
 
+            //if (body == null)
+            //    body = string.Empty; // 偷懶的寫法
+
+            string bodyColumnSQL = "";
+            string bodyValueSQL = "";
+            if (!string.IsNullOrWhiteSpace(body))
+            {
+                bodyColumnSQL = ", Body";
+                bodyValueSQL = ", @Body";
+            }
+
 
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
@@ -75,7 +86,7 @@ namespace AccountingNote.DBSource
                                ,Amount
                                ,ActType
                                ,CreateDate
-                               ,Body
+                                {bodyColumnSQL}
                     )
                     VALUES
                     (
@@ -84,7 +95,7 @@ namespace AccountingNote.DBSource
                                 ,@amount
                                 ,@actType
                                 ,@createDate
-                                ,@body 
+                                {bodyValueSQL} 
                     ) ";
 
             List<SqlParameter> paramList = new List<SqlParameter>();
@@ -93,7 +104,11 @@ namespace AccountingNote.DBSource
             paramList.Add(new SqlParameter("@amount", amount));
             paramList.Add(new SqlParameter("@actType", actType));
             paramList.Add(new SqlParameter("@createDate", DateTime.Now));
-            paramList.Add(new SqlParameter("@body", body));
+
+            if(!string.IsNullOrWhiteSpace(body))
+                paramList.Add(new SqlParameter("@body", body));
+
+
 
             // connect db & execute
             try
@@ -225,7 +240,7 @@ namespace AccountingNote.DBSource
             // connect db & execute
             try
             {
-                DBHelper. ModifyData(connStr, dbCommand, paramList);
+                DBHelper.ModifyData(connStr, dbCommand, paramList);
             }
             catch (Exception ex)
             {
@@ -233,6 +248,6 @@ namespace AccountingNote.DBSource
             }
         }
 
-        
+
     }
 }
