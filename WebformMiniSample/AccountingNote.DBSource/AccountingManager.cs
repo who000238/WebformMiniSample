@@ -12,8 +12,12 @@ namespace AccountingNote.DBSource
     public class AccountingManager
     {
 
-
-        public static DataTable GetAccountingList(string userID)
+        /// <summary>
+        /// 查詢流水帳清單
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static DataTable GetAccountingList(string userID)            //查詢清單
         {
             string connStr = DBHelper.GetConnectionString();
             string dbCommand =
@@ -42,6 +46,39 @@ namespace AccountingNote.DBSource
         }
 
 
+        /// <summary>
+        /// 查詢流水帳
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static DataRow GetAccounting(int id, string userID)
+        {
+            string connStr = DBHelper.GetConnectionString();
+            string dbCommand =
+                $@" SELECT 
+                      ID,
+                      Caption,
+                      Amount,
+                      ActType,
+                      CreateDate,
+                      Body
+                    FROM Accounting
+                    WHERE id = @id AND UserID = @userID
+                ";
+            List<SqlParameter> list = new List<SqlParameter>();
+            list.Add(new SqlParameter("@id", id));
+            list.Add(new SqlParameter("@userID", userID));
+            try
+            {
+                return DBHelper.ReadDataRow(connStr, dbCommand, list);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
 
         /// <summary>
         /// 建立流水帳
@@ -190,42 +227,12 @@ namespace AccountingNote.DBSource
                 return false;
             }
         }
+
+
         /// <summary>
-        /// 查詢流水帳
+        /// 刪除流水帳
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userID"></param>
-        /// <returns></returns>
-        public static DataRow GetAccounting(int id, string userID)
-        {
-            string connStr = DBHelper.GetConnectionString();
-            string dbCommand =
-                $@" SELECT 
-                      ID,
-                      Caption,
-                      Amount,
-                      ActType,
-                      CreateDate,
-                      Body
-                    FROM Accounting
-                    WHERE id = @id AND UserID = @userID
-                ";
-            List<SqlParameter> list = new List<SqlParameter>();
-            list.Add(new SqlParameter("@id", id));
-            list.Add(new SqlParameter("@userID", userID));
-            try
-            {
-                return DBHelper.ReadDataRow(connStr, dbCommand, list);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-                return null;
-            }
-        }
-
-
-
+        /// <param name="ID"></param>
         public static void DeleteAccounting(int ID)
         {
             string connStr = DBHelper.GetConnectionString();
