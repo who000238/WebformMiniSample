@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data;
+using AccountingNote.ORM.DBModels;
 
 namespace AccountingNote.Handlers
 {
@@ -161,24 +162,20 @@ namespace AccountingNote.Handlers
             }
             else if (actionName == "list")
             {
-                string userID = "B7E4FFFB-BE01-4B3D-B79A-608F9F1599FB";
+                Guid userGUID = new Guid("B7E4FFFB-BE01-4B3D-B79A-608F9F1599FB");
 
-                DataTable dataTable = AccountingManager.GetAccountingList(userID);
+                List<Accounting> sourceList = AccountingManager.GetAccountingList(userGUID);
+                List<AccountingNoteViewModel> list =
+                        sourceList.Select(obj => new AccountingNoteViewModel()
+                        {
+                            ID = obj.ID,
+                            Caption = obj.Caption,
+                            Amount = obj.Amount,
+                            ActType =
+                                    (obj.ActType == 0) ? "支出" : "收入",
+                            CreateDate = obj.CreateDate.ToString("yyyy-MM-dd")
+                        }).ToList();
 
-                List<AccountingNoteViewModel> list = new List<AccountingNoteViewModel>();
-                foreach (DataRow drAccounting in dataTable.Rows)
-                {
-                    AccountingNoteViewModel model = new AccountingNoteViewModel()
-                    {
-                        ID = drAccounting["ID"].ToString(),
-                        Caption = drAccounting["Caption"].ToString(),
-                        Amount = drAccounting.Field<int>("Amount"),
-                        ActType = (drAccounting.Field<int>("ActType") == 0) ? "支出" : "收入",
-                        CreateDate = drAccounting.Field<DateTime>("CreateDate").ToString("yyyy-MM-dd")
-                    };
-
-                    list.Add(model);
-                }
 
                 string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(list);
 
@@ -205,7 +202,7 @@ namespace AccountingNote.Handlers
 
                 AccountingNoteViewModel model = new AccountingNoteViewModel()
                 {
-                    ID = drAccounting["ID"].ToString(),
+                    ID = drAccounting.Field<int>("ID"),
                     Caption = drAccounting["Caption"].ToString(),
                     Body = drAccounting["Body"].ToString(),
                     CreateDate = drAccounting.Field<DateTime>("CreateDate").ToString("yyyy-MM-dd"),

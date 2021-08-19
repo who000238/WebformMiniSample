@@ -39,27 +39,11 @@ namespace AccountingNote.Handlers
             string userID = dr["ID"].ToString();
             Guid userGUID = userID.ToGuid();
             List<Accounting> sourceList = AccountingManager.GetAccountingList(userGUID);
-
-            //DataTable dataTable = AccountingManager.GetAccountingList(userID);
-
-            //List<AccountingNoteViewModel> list = new List<AccountingNoteViewModel>();
-            //foreach (DataRow drAccounting in dataTable.Rows)
-            //{
-            //    AccountingNoteViewModel model = new AccountingNoteViewModel()
-            //    {
-            //        ID = drAccounting["ID"].ToString(),
-            //        Caption = drAccounting["Caption"].ToString(),
-            //        Amount = drAccounting.Field<int>("Amount"),
-            //        ActType = (drAccounting.Field<int>("ActType") == 0) ? "支出" : "收入",
-            //        CreateDate = drAccounting.Field<DateTime>("CreateDate").ToString("yyyy-MM-dd")
-            //    };
-
-            //    list.Add(model); 
-            //}
+            
             List<AccountingNoteViewModel> list =
                     sourceList.Select(obj => new AccountingNoteViewModel()
                     {
-                        ID = obj.ID.ToString(),
+                        ID = obj.ID,
                         Caption = obj.Caption,
                         Amount = obj.Amount,
                         ActType =
