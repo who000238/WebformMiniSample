@@ -27,18 +27,16 @@ namespace AccountingNote.Handlers
                 return;
             }
 
-            var dr = UserInfoManger.GetUserInfoByAccount(account);
+            var userInfo = UserInfoManger.GetUserInfoByAccount(account);
 
-            if (dr == null)
+            if (userInfo == null)
             {
                 context.Response.StatusCode = 404;
                 context.Response.End();
                 return;
             }
 
-            string userID = dr["ID"].ToString();
-            Guid userGUID = userID.ToGuid();
-            List<Accounting> sourceList = AccountingManager.GetAccountingList(userGUID);
+            List<Accounting> sourceList = AccountingManager.GetAccountingList(userInfo.ID);
             
             List<AccountingNoteViewModel> list =
                     sourceList.Select(obj => new AccountingNoteViewModel()

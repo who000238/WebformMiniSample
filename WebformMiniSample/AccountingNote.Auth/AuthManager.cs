@@ -37,19 +37,21 @@ namespace AccountingNote.Auth
             if (account == null)
                 return null;
 
-            DataRow dr = UserInfoManger.GetUserInfoByAccount(account);
+            //DataRow dr = UserInfoManger.GetUserInfoByAccount(account);
+            var userInfo = UserInfoManger.GetUserInfoByAccount(account);
 
-            if (dr == null)
+            if (userInfo == null)
             {
                 HttpContext.Current.Session["UserLoginInfo"] = null;
                 return null;
             }
 
             UserInfoModel model = new UserInfoModel();
-            model.ID = dr["ID"].ToString();
-            model.Account = dr["Account"].ToString();
-            model.Name = dr["Name"].ToString();
-            model.Email = dr["Email"].ToString();
+            model.ID = userInfo.ID;
+            model.Account = userInfo.Account;
+            model.Name = userInfo.Name;
+            model.Email = userInfo.Email;
+            model.MobilePhone = userInfo.MobilePhone;
 
             return model;
         }
@@ -76,20 +78,20 @@ namespace AccountingNote.Auth
                 return false;
             }
             //read db and check
-            var dr = UserInfoManger.GetUserInfoByAccount(account);
+            var userInfo = UserInfoManger.GetUserInfoByAccount(account);
 
             //check null
-            if (dr == null)
+            if (userInfo == null)
             {
                 errorMsg = $"{account}不存在";
                 return false;
             }
 
             //check account / pwd
-            if (string.Compare(dr["Account"].ToString(), account, true) == 0 &&
-               string.Compare(dr["PWD"].ToString(), pwd, false) == 0)
+            if (string.Compare(userInfo.Account, account, true) == 0 &&
+                string.Compare(userInfo.PWD, pwd, false) == 0)
             {
-                HttpContext.Current.Session["UserLoginInfo"] = dr["Account"].ToString();
+                HttpContext.Current.Session["UserLoginInfo"] = userInfo.Account;
                 errorMsg = string.Empty;
                 return true;
             }

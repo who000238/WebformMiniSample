@@ -51,6 +51,10 @@
       <Project>{a70d97e7-80fe-4b8e-8ac0-8ed3e3458faf}</Project>
       <Name>AccountingNote.DBSource</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AccountingNote.ORM\AccountingNote.ORM.csproj">
+      <Project>{f205a4ca-3186-4c8e-8e27-e18d93baab0a}</Project>
+      <Name>AccountingNote.ORM</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -48,7 +48,7 @@ namespace AccountingNote.SystemAdmin
                     if (int.TryParse(idText, out id))
                     {
                         //var drAccounting = AccountingManager.GetAccounting(id,drUserInfo["ID"].ToString());
-                        var accounting = AccountingManager.GetAccounting(id, currentUser.ID.ToGuid());
+                        var accounting = AccountingManager.GetAccounting(id, currentUser.ID);
                         if (accounting == null)
                         {
                             this.ltMsg.Text = "Data doesn't exist";
@@ -100,7 +100,6 @@ namespace AccountingNote.SystemAdmin
                 return;
             }
 
-            string userID = currentUser.ID;
             string actTypeText = this.ddlActType.SelectedValue;
             string amountText = this.txtAmount.Text;
 
@@ -111,8 +110,8 @@ namespace AccountingNote.SystemAdmin
             string idText = this.Request.QueryString["ID"];
             Accounting accounting = new Accounting()
             {
-                UserID = userID.ToGuid(),
-                ActType = actType,
+                UserID = currentUser.ID,
+            ActType = actType,
                 Amount = amount,
                 Body = this.txtDesc.Text,
                 Caption = this.txtCaption.Text
@@ -181,7 +180,7 @@ namespace AccountingNote.SystemAdmin
             if (int.TryParse(idText, out id))
             {
                 //Excute 'deldete db'
-                AccountingManager.DeleteAccounting(id);
+                AccountingManager.DeleteAccounting_ORM(id);
             }
 
             Response.Redirect("/SystemAdmin/AccountingList.aspx");
