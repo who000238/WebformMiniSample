@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccountingNote.ORM.DBModels;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -45,9 +46,34 @@ namespace AccountingNote.DBSource
             }
         }
 
+        /// <summary>
+        /// 查詢流水帳清單 EF版本
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static List<Accounting> GetAccountingList(Guid userID)
+        {
+            try
+            {
+                using (ContextModel context = new ContextModel())
+                {
+                    var query =
+                        (from item in context.Accountings
+                         where item.UserID == userID
+                         select item);
+                    var list = query.ToList();
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+        }
 
         /// <summary>
-        /// 查詢流水帳
+        /// 查詢流水帳 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userID"></param>
@@ -78,6 +104,33 @@ namespace AccountingNote.DBSource
                 Logger.WriteLog(ex);
                 return null;
             }
+        }
+        /// <summary>
+        /// 查詢流水帳 EF版本
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static List<Accounting> GetAccounting(int id , Guid userID)
+        {
+            try
+            {
+                using (ContextModel context = new ContextModel())
+                {
+                    var query =
+                        (from item in context.Accountings
+                         where item.UserID == userID && item.ID == id
+                         select item);
+                    var list = query.ToList();
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+                return null;
+            }
+         
         }
 
         /// <summary>

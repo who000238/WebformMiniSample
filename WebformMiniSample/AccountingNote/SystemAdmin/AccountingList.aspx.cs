@@ -35,16 +35,32 @@ namespace AccountingNote.SystemAdmin
 
 
             //read accounting data
-            var dt = AccountingManager.GetAccountingList(currentUser.ID);
-            if (dt.Rows.Count > 0) //check is empty data
+            var list = AccountingManager.GetAccountingList(currentUser.UserGuid);
+            //if (dt.Rows.Count > 0) //check is empty data
+            //{
+            //    var dtPaged = this.GetPagedDataTable(dt);
+
+            //    this.gvAccountingList.DataSource = dtPaged;
+            //    this.gvAccountingList.DataBind();
+
+            //    this.ucPager2.TotalSize = dt.Rows.Count;
+            //    this.ucPager2.Bind();
+
+            //    //this.ucPager.TotalSize = dt.Rows.Count;
+            //    //this.ucPager.Bind();
+            //}
+            if (list.Count > 0) //check is empty data
             {
-                var dtPaged = this.GetPagedDataTable(dt);
+                //var dtPaged = this.GetPagedDataTable(list);
 
-                this.ucPager2.TotalSize = dt.Rows.Count;
-                this.ucPager2.Bind();
-
-                this.gvAccountingList.DataSource = dtPaged;
+                //this.gvAccountingList.DataSource = dtPaged;
+                this.gvAccountingList.DataSource = list;
                 this.gvAccountingList.DataBind();
+
+                //this.ucPager2.TotalSize = dt.Rows.Count;
+                this.ucPager2.TotalSize = list.Count;
+
+                this.ucPager2.Bind();
 
                 //this.ucPager.TotalSize = dt.Rows.Count;
                 //this.ucPager.Bind();

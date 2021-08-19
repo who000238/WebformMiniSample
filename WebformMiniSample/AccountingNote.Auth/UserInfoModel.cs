@@ -13,5 +13,22 @@ namespace AccountingNote.Auth
         public string PWD { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+
+        public Guid UserGuid
+        {
+            get 
+            {
+                if(Guid.TryParse(this.ID, out Guid tempGuid))
+                {
+                    return tempGuid;
+                }
+                else
+                {
+                    //return null; //實質型別不可回傳null
+                    return Guid.Empty;
+                }
+            }
+        }
+
     }
 }
