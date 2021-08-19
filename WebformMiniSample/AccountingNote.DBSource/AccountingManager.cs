@@ -111,7 +111,7 @@ namespace AccountingNote.DBSource
         /// <param name="id"></param>
         /// <param name="userID"></param>
         /// <returns></returns>
-        public static List<Accounting> GetAccounting(int id , Guid userID)
+        public static Accounting GetAccounting(int id , Guid userID)
         {
             try
             {
@@ -121,8 +121,8 @@ namespace AccountingNote.DBSource
                         (from item in context.Accountings
                          where item.UserID == userID && item.ID == id
                          select item);
-                    var list = query.ToList();
-                    return list;
+                    var obj = query.FirstOrDefault();
+                    return obj;
                 }
             }
             catch (Exception ex)

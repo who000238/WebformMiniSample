@@ -188,10 +188,11 @@ namespace AccountingNote.Handlers
                 int id;
                 int.TryParse(idText, out id);
                 string userID = "B7E4FFFB-BE01-4B3D-B79A-608F9F1599FB";
+                Guid userGUID = new Guid("B7E4FFFB-BE01-4B3D-B79A-608F9F1599FB");
 
-                var drAccounting = AccountingManager.GetAccounting(id, userID);
+                var accounting = AccountingManager.GetAccounting(id, userGUID);
 
-                if (drAccounting == null)
+                if (accounting == null)
                 {
                     context.Response.StatusCode = 400;
                     context.Response.ContentType = "text/plain";
@@ -202,12 +203,12 @@ namespace AccountingNote.Handlers
 
                 AccountingNoteViewModel model = new AccountingNoteViewModel()
                 {
-                    ID = drAccounting.Field<int>("ID"),
-                    Caption = drAccounting["Caption"].ToString(),
-                    Body = drAccounting["Body"].ToString(),
-                    CreateDate = drAccounting.Field<DateTime>("CreateDate").ToString("yyyy-MM-dd"),
-                    ActType = drAccounting.Field<int>("ActType").ToString(),
-                    Amount = drAccounting.Field<int>("Amount")
+                    ID = accounting.ID,
+                    Caption = accounting.Caption,
+                    Body = accounting.Body,
+                    Amount = accounting.Amount,
+                    ActType = (accounting.ActType == 0) ? "支出" : "收入",
+                    CreateDate = accounting.CreateDate.ToString("yyyy-MM-dd")
                 };
 
                 string jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(model);
