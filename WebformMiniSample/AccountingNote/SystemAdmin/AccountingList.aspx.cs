@@ -1,5 +1,6 @@
 ﻿using AccountingNote.Auth;
 using AccountingNote.DBSource;
+using AccountingNote.ORM.DBModels;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -51,10 +52,9 @@ namespace AccountingNote.SystemAdmin
             //}
             if (list.Count > 0) //check is empty data
             {
-                //var dtPaged = this.GetPagedDataTable(list);
+                var pagedList = this.GetPagedDataTable(list);
 
-                //this.gvAccountingList.DataSource = dtPaged;
-                this.gvAccountingList.DataSource = list;
+                this.gvAccountingList.DataSource = pagedList;
                 this.gvAccountingList.DataBind();
 
                 //this.ucPager2.TotalSize = dt.Rows.Count;
@@ -89,6 +89,12 @@ namespace AccountingNote.SystemAdmin
                 return 1;
 
             return intPage;
+        }
+
+        private List<Accounting> GetPagedDataTable(List<Accounting> list)
+        {
+            int startIndex = (this.GetCurrentPage() - 1) * 10;
+            return list.Skip(startIndex).Take(10).ToList();
         }
 
         private DataTable GetPagedDataTable(DataTable dt)
@@ -131,8 +137,11 @@ namespace AccountingNote.SystemAdmin
                 //Literal ltl = row.FindControl("ltActType") as Literal;
                 Label lbl = row.FindControl("lblActType") as Label;
 
-                var dr = row.DataItem as DataRowView;
-                int actType = dr.Row.Field<int>("ActType");
+                //var dr = row.DataItem as DataRowView;
+                //int actType = dr.Row.Field<int>("ActType");
+
+                var rowData = row.DataItem as Accounting;
+                int actType = rowData.ActType;
 
                 if (actType == 0)
                 {
@@ -145,7 +154,7 @@ namespace AccountingNote.SystemAdmin
                     lbl.Text = "收入";
                 }
 
-                if (dr.Row.Field<int>("Amount") > 1500)
+                if (rowData.Amount > 1500)
                 {
                     lbl.ForeColor = Color.Red;
                 }
