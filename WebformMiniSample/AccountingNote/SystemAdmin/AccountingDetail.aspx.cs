@@ -1,6 +1,7 @@
 ﻿using AccountingNote.Auth;
 using AccountingNote.DBSource;
 using AccountingNote.Extensions;
+using AccountingNote.ORM.DBModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,7 +84,7 @@ namespace AccountingNote.SystemAdmin
 
             UserInfoModel currentUser = AuthManager.GetCurrentUser();
 
-            if (currentUser == null)                                         
+            if (currentUser == null)
             {
                 Response.Redirect("/Login.aspx");
                 return;
@@ -99,21 +100,27 @@ namespace AccountingNote.SystemAdmin
                 return;
             }
 
-            string userID = dr["ID"].ToString();
+            string userID = currentUser.ID;
             string actTypeText = this.ddlActType.SelectedValue;
             string amountText = this.txtAmount.Text;
-            string caption = this.txtCaption.Text;
-            string body = this.txtDesc.Text;
 
             int amount = Convert.ToInt32(amountText);
             int actType = Convert.ToInt32(actTypeText);
 
 
             string idText = this.Request.QueryString["ID"];
+            Accounting accounting = new Accounting()
+            {
+                UserID = userID.ToGuid(),
+                ActType = actType,
+                Amount = amount,
+                Body = this.txtDesc.Text,
+                Caption = this.txtCaption.Text
+            };
             if (string.IsNullOrWhiteSpace(idText))
             {
                 //excute 'insert into db'
-                AccountingManager.CreateAccounting(userID, caption, amount, actType, body);
+                AccountingManager.CreateAccounting(accounting);
             }
             else
             {
@@ -121,7 +128,8 @@ namespace AccountingNote.SystemAdmin
                 if (int.TryParse(idText, out id))
                 {
                     //Excute 'update db'
-                    AccountingManager.UpdateAccounting(id, userID, caption, amount, actType, body);
+                    accounting.ID = id;
+                    AccountingManager.UpdateAccounting(accounting);
                 }
             }
             Response.Redirect("/SystemAdmin/AccountingList.aspx");
@@ -169,13 +177,13 @@ namespace AccountingNote.SystemAdmin
             if (string.IsNullOrWhiteSpace(idText))
 
                 return;
-                int id;
-                if (int.TryParse(idText, out id))
-                {
+            int id;
+            if (int.TryParse(idText, out id))
+            {
                 //Excute 'deldete db'
                 AccountingManager.DeleteAccounting(id);
             }
-            
+
             Response.Redirect("/SystemAdmin/AccountingList.aspx");
         }
     }

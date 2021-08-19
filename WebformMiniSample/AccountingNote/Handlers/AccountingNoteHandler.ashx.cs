@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using AccountingNote.ORM.DBModels;
+using AccountingNote.Extensions;
 
 namespace AccountingNote.Handlers
 {
@@ -55,10 +56,18 @@ namespace AccountingNote.Handlers
                     this.ProcessError(context, "Amount,ActType should be integer.");
                     return;
                 }
-                try                                                                                                     //使用try catch若成功則創建 若失敗則回報503代碼
+                try                                                      //使用try catch若成功則創建 若失敗則回報503代碼
                 {
                     //建立流水帳
-                    AccountingManager.CreateAccounting(id, caption, tempAmount, tempActType, body);
+                    Accounting accounting = new Accounting()
+                    {
+                        UserID = id.ToGuid(),
+                        Caption = caption,
+                        Body = body,
+                        Amount = tempAmount,
+                        ActType = tempActType
+                    };
+                    AccountingManager.CreateAccounting(accounting);
                     context.Response.ContentType = "text/plain";
                     context.Response.Write("OK");
                 }
