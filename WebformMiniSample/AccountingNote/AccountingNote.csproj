@@ -106,6 +106,7 @@
     <Compile Include="AjaxAccountingNote.aspx.designer.cs">
       <DependentUpon>AjaxAccountingNote.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Handlers\AccountingNoteHandler.ashx.cs">
       <DependentUpon>AccountingNoteHandler.ashx</DependentUpon>
     </Compile>
